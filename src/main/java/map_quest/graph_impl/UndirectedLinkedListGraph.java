@@ -1,12 +1,14 @@
-package map_quest;
+package map_quest.graph_impl;
+
+import map_quest.Node;
 
 import java.util.*;
 
-public class UndirectedGraph {
+public class UndirectedLinkedListGraph {
 
     private Set<Node> nodes;
 
-    public UndirectedGraph(Collection<Node> nodes) {
+    public UndirectedLinkedListGraph(Collection<Node> nodes) {
         this.nodes = new HashSet<>(nodes);
     }
 

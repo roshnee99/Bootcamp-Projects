@@ -1,6 +1,6 @@
 package map_quest.project1;
 
-import map_quest.UndirectedGraph;
+import map_quest.graph_impl.UndirectedLinkedListGraph;
 import map_quest.Node;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class CreatingGraph {
 
 
         // now, let us print out all the nodes and their neighbors
-        UndirectedGraph graph = new UndirectedGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE));
+        UndirectedLinkedListGraph graph = new UndirectedLinkedListGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE));
         graph.printGraph();
 
     }

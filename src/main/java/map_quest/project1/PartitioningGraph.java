@@ -1,6 +1,6 @@
 package map_quest.project1;
 
-import map_quest.UndirectedGraph;
+import map_quest.graph_impl.UndirectedLinkedListGraph;
 import map_quest.Node;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class PartitioningGraph {
         nodeA.addNeighbor(nodeB).addNeighbor(nodeC);
         nodeB.addNeighbor(nodeD);
         nodeE.addNeighbor(nodeF);
-        UndirectedGraph graph = new UndirectedGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF));
+        UndirectedLinkedListGraph graph = new UndirectedLinkedListGraph(Arrays.asList(nodeA, nodeB, nodeC, nodeD, nodeE, nodeF));
         graph.printGraph();
 
         System.out.println("\n");
@@ -51,7 +51,7 @@ public class PartitioningGraph {
         List<Set<Node>> neighborhoods = graph.getNeighborhoods();
         for (Set<Node> neighborhood : neighborhoods) {
             System.out.println("*********************Neighborhood************************");
-            UndirectedGraph subGraph = new UndirectedGraph(neighborhood);
+            UndirectedLinkedListGraph subGraph = new UndirectedLinkedListGraph(neighborhood);
             System.out.println("Members of neighborhood: " + subGraph.getNodesAsString());
             subGraph.printGraph();
         }
