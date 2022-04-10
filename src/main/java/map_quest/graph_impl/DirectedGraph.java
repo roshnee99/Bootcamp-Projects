@@ -1,5 +1,6 @@
 package map_quest.graph_impl;
 
+import javafx.util.Pair;
 import map_quest.Edge;
 import map_quest.Vertex;
 
@@ -70,6 +71,13 @@ public class DirectedGraph {
         return adjacencyList.get(start).keySet();
     }
 
+    public Edge getEdge(Vertex start, Vertex dest) {
+        if (adjacencyList.containsKey(start) && adjacencyList.get(start).containsKey(dest)) {
+            return adjacencyList.get(start).get(dest);
+        }
+        return null;
+    }
+
     /**
      * A depth first ordering of the graph starts at the start node, and picks a neighbor
      * It goes all the way down that graph, and then picks another neighbor, and so on...
@@ -81,10 +89,8 @@ public class DirectedGraph {
     public List<Vertex> depthFirstOrderingOfGraph(Vertex start) {
         List<Vertex> ordering = new ArrayList<>();
         Set<Vertex> visited = new HashSet<>();
-
         Stack<Vertex> stack = new Stack<>();
         stack.push(start);
-
         while (!stack.isEmpty()) {
             Vertex current = stack.pop();
             if (!visited.contains(current)) {
@@ -110,22 +116,62 @@ public class DirectedGraph {
     public List<Vertex> breadthFirstOrderingOfGraph(Vertex start) {
         List<Vertex> ordering = new ArrayList<>();
         Set<Vertex> visited = new HashSet<>();
-
         Queue<Vertex> queue = new LinkedList<>();
         queue.add(start);
-
         while (!queue.isEmpty()) {
             Vertex current = queue.remove();
             if (!visited.contains(current)) {
                 ordering.add(current);
                 visited.add(current);
                 Set<Vertex> possibleDestinations = getPossibleDestinations(current);
-                for (Vertex v : possibleDestinations) {
-                    queue.add(v);
-                }
+                queue.addAll(possibleDestinations);
             }
         }
         return ordering;
+    }
+
+    /**
+     * Uses breadth first to find the path that has the least number of edges
+     * @param start the start Vertex. Will return empty path if start not in graph
+     * @param end the end Vertex. Will return empty path if end not in graph
+     * @return The path, if exists, from start to end in Stack. If no path, will just return end Vertex.
+     *         If start or end not in graph, will return empty Stack
+     * @throws IllegalArgumentException if start or end are not in graph
+     */
+    public Stack<Vertex> getShortestPathBreadthFirst(Vertex start, Vertex end) {
+        if (!adjacencyList.containsKey(start) || !adjacencyList.containsKey(end)) {
+            throw new IllegalArgumentException("Start or end vertex not in graph");
+        }
+        // contains next vertex to visit, and its parent
+        Queue<Pair<Vertex, Vertex>> queue = new LinkedList<>();
+        queue.add(new Pair<>(start, null));
+        // contains all vertices we've visited, and their parents as values
+        Map<Vertex, Vertex> visitedToParent = new HashMap<>();
+        boolean foundDest = false;
+        // do BFS while maintaining parents, until end is found
+        while (!queue.isEmpty() && !foundDest) {
+            Pair<Vertex, Vertex> currentPair = queue.remove();
+            Vertex current = currentPair.getKey();
+            Vertex currentParent = currentPair.getValue();
+            if (!visitedToParent.containsKey(current)) {
+                visitedToParent.put(current, currentParent);
+                if (current.equals(end)) {
+                    foundDest = true;
+                }
+                Set<Vertex> destinations = getPossibleDestinations(current);
+                for (Vertex dest : destinations) {
+                    queue.add(new Pair<>(dest, current));
+                }
+            }
+        }
+        Stack<Vertex> path = new Stack<>();
+        Vertex current = end;
+        while (current != null) {
+            Vertex parent = visitedToParent.get(current);
+            path.push(current);
+            current = parent;
+        }
+        return path;
     }
 
 }
