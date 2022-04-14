@@ -1,8 +1,8 @@
 package map_quest.graph_impl;
 
-import javafx.util.Pair;
 import map_quest.Edge;
 import map_quest.Vertex;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
@@ -144,7 +144,7 @@ public class DirectedGraph {
         }
         // contains next vertex to visit, and its parent
         Queue<Pair<Vertex, Vertex>> queue = new LinkedList<>();
-        queue.add(new Pair<>(start, null));
+        queue.add(Pair.of(start, null));
         // contains all vertices we've visited, and their parents as values
         Map<Vertex, Vertex> visitedToParent = new HashMap<>();
         boolean foundDest = false;
@@ -160,7 +160,7 @@ public class DirectedGraph {
                 }
                 Set<Vertex> destinations = getPossibleDestinations(current);
                 for (Vertex dest : destinations) {
-                    queue.add(new Pair<>(dest, current));
+                    queue.add(Pair.of(dest, current));
                 }
             }
         }
