@@ -174,4 +174,75 @@ public class DirectedGraph {
         return path;
     }
 
+    /**
+     * Uses a variation of breadth first search to traverse through graph and determine the shortest path from start to end
+     * Completes two maps, one for the distance from start to each vertex, and one for the parent of each vertex
+     * Using the parent vertex, one can backtrack to find the shortest path because eventually will reach the start
+     * Can use this to reconstruct the shortest distance, or can use the start to each vertex distance to just know the distance
+     *
+     * It will populate the maps provided so that they can be accessed easily by the callee
+     * @param start the vertex to start at
+     * @param destinationToPrevious mapping of vertex to node to get there. Helps log the path taken. Should be empty when passed.
+     * @param shortestDistanceMap mapping of vertex to the distance. Should be empty when passed.
+     */
+    public void getDijktrasShortestPaths(Vertex start, Map<Vertex, Vertex> destinationToPrevious, Map<Vertex, Integer> shortestDistanceMap) {
+        shortestDistanceMap.put(start, 0);
+        destinationToPrevious.put(start, null);
+        // priority queue of all the shortest distances to all vertices
+        Queue<DistanceWrapperComparable> queue = new PriorityQueue<>();
+        queue.add(new DistanceWrapperComparable(start, 0));
+        // set of all visited vertices
+        Set<Vertex> visited = new HashSet<>();
+        // initialize queue with all vertices
+        for (Vertex v : adjacencyList.keySet()) {
+            if (!v.equals(start)) {
+                shortestDistanceMap.put(v, Integer.MAX_VALUE);
+                queue.add(new DistanceWrapperComparable(v, Integer.MAX_VALUE));
+            }
+        }
+        // go through queue until all vertices are visited
+        while (!queue.isEmpty()) {
+            DistanceWrapperComparable current = queue.remove();
+            Vertex currentVertex = current.getVertex();
+            Set<Vertex> neighbors = this.getPossibleDestinations(currentVertex);
+            for (Vertex dest : neighbors) {
+                if (!visited.contains(dest)) {
+                    // get distance of (start to current) + (current to dest)
+                    int tempDistance = shortestDistanceMap.get(currentVertex) + this.getEdge(currentVertex, dest).getWeight();
+                    // if this new path is shorter, update the shortest distance map
+                    if (tempDistance < shortestDistanceMap.get(dest)) {
+                        // update queue distance
+                        queue.remove(new DistanceWrapperComparable(dest, shortestDistanceMap.get(dest)));
+                        shortestDistanceMap.put(dest, tempDistance);
+                        destinationToPrevious.put(dest, currentVertex);
+                        queue.add(new DistanceWrapperComparable(dest, shortestDistanceMap.get(dest)));
+                    }
+                }
+            }
+            // once we've visited all neighbors, we can consider this vertex visited
+            visited.add(currentVertex);
+        }
+    }
+
+    public void printShortestPathInfo(Vertex start, Vertex end, Map<Vertex, Vertex> destinationToPrevious, Map<Vertex, Integer> shortestDistanceMap) {
+        // shortest distance from a to k
+        System.out.println("Shortest distance from " + start + " to " + end + ": " + shortestDistanceMap.get(end));
+        // path from a to k
+        Stack<Edge> edgePath = new Stack<>();
+        Vertex current = end;
+        while (current != null) {
+            Vertex parent = destinationToPrevious.get(current);
+            edgePath.push(this.getEdge(parent, current));
+            current = parent;
+        }
+        System.out.print(start);
+        while (!edgePath.isEmpty()) {
+            Edge currentEdge = edgePath.pop();
+            if (currentEdge != null) {
+                System.out.print(" - " + currentEdge.getWeight() + " -> " + currentEdge.getEnd());
+            }
+        }
+        System.out.println();
+    }
+
 }
