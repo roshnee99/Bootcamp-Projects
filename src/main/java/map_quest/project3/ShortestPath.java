@@ -40,6 +40,13 @@ public class ShortestPath {
         List<Edge> edges = Arrays.asList(ab, ac, af, bc, cd, de, ef, fg, gh, gi, gj, hk, ik, jk);
         DirectedGraph graph = new DirectedGraph(vertices, edges);
 
+        // find least number of edges to take
+        Stack<Vertex> path = graph.getShortestPathBreadthFirst(a, k);
+        while (!path.isEmpty()) {
+            System.out.print(path.pop() + " -> ");
+        }
+        System.out.println("\n");
+
         // finding the shortest path on a weighted graph
         Map<Vertex, Vertex> childToParentMap = new HashMap<>();
         Map<Vertex, Integer> distanceMap = new HashMap<>();
