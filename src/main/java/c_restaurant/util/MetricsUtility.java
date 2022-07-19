@@ -1,4 +1,4 @@
-package c_restaurant.main;
+package c_restaurant.util;
 
 import c_restaurant.bean.Food;
 import c_restaurant.bean.MenuItem;
