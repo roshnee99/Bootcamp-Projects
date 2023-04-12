@@ -84,7 +84,7 @@ public int[] getDistances(int[][] graph, int startingNode) {
 
 private int getNodeThatsClosestAndNotVisited(int[] distance, boolean[] visited) {
 	int minDistance = Integer.MAX_VALUE;
-  int minDistanceVertex = -1;
+        int minDistanceVertex = -1;
 	for (int i = 0; i < distance.length; i++) {
 		// if node is not visited
 		if (!visited[i]) {
